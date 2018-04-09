@@ -46,6 +46,7 @@ public class Producer extends Thread {
     private final int sleepTime;
     private final SecureRandom r;
     private final Buffer buff;
+    private boolean isRunning = true;
     
     public Producer(int id, int m, int n, int sleepTime, Buffer buff) {
         this.id = id;
@@ -58,15 +59,13 @@ public class Producer extends Thread {
     
     @Override
     public void run() {
-        System.out.println("Running Producer " + this.id);
-        while (true) {
+        while (isRunning) {
             Operation op = new Operation(
                     Producer.OPERATIONS[r.nextInt(4)],
                     new Float(r.nextInt(this.n - this.m) + m),
                     new Float(r.nextInt(this.n - this.m) + m)
             );
-            this.buff.produce(op);
-            this.buff.print("Producer " + this.id + " produced " + op);
+            this.buff.produce(this.id, op);
             try {
                 Thread.sleep(this.sleepTime);
             } catch (InterruptedException ex) {
@@ -74,5 +73,9 @@ public class Producer extends Thread {
                        .log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public void terminate() {
+        this.isRunning = false;
     }
 }

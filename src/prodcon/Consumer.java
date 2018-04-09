@@ -36,21 +36,22 @@ public class Consumer extends Thread {
     private final int id;
     private final int sleepTime;
     private final Buffer buff;
+    private boolean isRunning = true;
+    private final ProdCon ui;
     
-    public Consumer(int id, int sleepTime, Buffer buff) {
+    public Consumer(int id, int sleepTime, Buffer buff, ProdCon ui) {
         this.id = id;
         this.sleepTime = sleepTime;
         this.buff = buff;
+        this.ui = ui;
     }
     
     @Override
     public void run() {
-        this.buff.print("Running Consumer " + this.id);
         Operation op;
-        while (true) {
+        while (isRunning) {
             op = this.buff.consume();
-            this.buff.print("Consumer " + this.id + " consumed " + op + 
-                            ". Result is " + op.eval()); 
+            this.ui.writeConsumedOperation(this.id, op, op.eval());
             try {
                 Thread.sleep(this.sleepTime);
             } catch (InterruptedException ex) {
@@ -58,5 +59,9 @@ public class Consumer extends Thread {
                        .log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public void terminate() {
+        this.isRunning = false;
     }
 }
