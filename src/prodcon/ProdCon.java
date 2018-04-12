@@ -23,6 +23,7 @@
  */
 package prodcon;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -125,10 +126,10 @@ public class ProdCon extends javax.swing.JFrame {
         jLabelProducersSleep.setText("Sleep time:");
 
         jSpinnerProducerSleepTime.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jSpinnerProducerSleepTime.setModel(new javax.swing.SpinnerNumberModel(100, 100, 10000, 100));
+        jSpinnerProducerSleepTime.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10000, 100));
 
         jSpinnerConsumerSleepTime.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jSpinnerConsumerSleepTime.setModel(new javax.swing.SpinnerNumberModel(100, 100, 10000, 100));
+        jSpinnerConsumerSleepTime.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10000, 100));
 
         jLabelConsumersSleep.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabelConsumersSleep.setText("Sleep time:");
@@ -151,14 +152,14 @@ public class ProdCon extends javax.swing.JFrame {
         jLabelValuesMin.setText("Minimum:");
 
         jSpinnerValuesMin.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jSpinnerValuesMin.setModel(new javax.swing.SpinnerNumberModel(1, 1, 100, 1));
+        jSpinnerValuesMin.setModel(new javax.swing.SpinnerNumberModel());
         jSpinnerValuesMin.setToolTipText("");
 
         jLabelValuesMax.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabelValuesMax.setText("Maximum:");
 
         jSpinnerValuesMax.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jSpinnerValuesMax.setModel(new javax.swing.SpinnerNumberModel(2, 2, 100, 1));
+        jSpinnerValuesMax.setModel(new javax.swing.SpinnerNumberModel());
         jSpinnerValuesMax.setToolTipText("");
 
         javax.swing.GroupLayout jPanelConfigureLayout = new javax.swing.GroupLayout(jPanelConfigure);
@@ -562,6 +563,17 @@ public class ProdCon extends javax.swing.JFrame {
         this.maxValue = (int)
                 this.jSpinnerValuesMax.getValue();
 
+        // Verify min is smaller or equal than max
+        if (this.minValue > this.maxValue) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "\"min\" cannot be larger than \"max\"!",
+                    "Invalid input",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+        
         this.jProgressBarBufferCapacity.setMaximum(this.bufferSize);
 
         // Initialize pipeline

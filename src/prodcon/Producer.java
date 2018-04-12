@@ -60,11 +60,19 @@ public class Producer extends Thread {
     @Override
     public void run() {
         while (isRunning) {
+            Float a, b;
+            if (this.m == this.n) {
+                a = new Float(m);
+                b = a;
+            }
+            else {
+                a = new Float(r.nextInt(this.n - this.m) + m);
+                b = new Float(r.nextInt(this.n - this.m) + m);
+            }
             Operation op = new Operation(
-                    Producer.OPERATIONS[r.nextInt(4)],
-                    new Float(r.nextInt(this.n - this.m) + m),
-                    new Float(r.nextInt(this.n - this.m) + m)
+                    Producer.OPERATIONS[r.nextInt(4)], a, b
             );
+            
             this.buff.produce(this.id, op);
             try {
                 Thread.sleep(this.sleepTime);
